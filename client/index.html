@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Chat</title>
+	</head>
+	<body>
+		<div id="chat">
+			<div id="chat-messages"></div>
+			<div id="chat-input">
+				<input type="text" id="chat-input-text" />
+				<button id="chat-input-submit">Send</button>
+			</div>
+		</div>
+		<script>
+			const chatMessages = document.getElementById('chat-messages');
+			const chatInputText = document.getElementById('chat-input-text');
+			const chatInputSubmit = document.getElementById('chat-input-submit');
+
+			const ws = new WebSocket('ws://localhost:8080');
+
+			chatInputSubmit.addEventListener('click', () => {
+				const message = chatInputText.value;
+				chatInputText.value = '';
+				chatInputText.focus();
+				<!-- chatMessages.innerHTML += `<div>${message}</div>`; -->
+				ws.send(message);
+			});
+
+			ws.addEventListener('message', (event) => {
+				const message = event.data;
+				console.log(message);
+				chatMessages.innerHTML += `<div>${message}</div>`;
+			});
+		</script>
+
+	</body>
+</html>
